@@ -1,17 +1,17 @@
 (function (angular) {
 	'use strict';
 	var app=angular.module("todosApp",[])
+	function setCookie(value){
+		window.localStorage.setItem('todos',JSON.stringify(value))
+	}
 	app.controller("todosController",['$scope',function($scope){
 		$scope.newTodo=''
 		$scope.id=0
 		$scope.isShow=0
 		$scope.isAll=false
-		$scope.isHide=false
-		$scope.firstArr=[
-			{id:0,name:'a',completed:true},
-			{id:1,name:'b',completed:false},
-		]
+		$scope.firstArr=JSON.parse(window.localStorage.getItem('todos') || '[]')
 		$scope.todos=$scope.firstArr
+		$scope.firstArr.length == 0 ? $scope.isHide=true:$scope.isHide=false
 		$scope.getId=function(){
 			if($scope.firstArr.length>0){
 				$scope.id=$scope.firstArr[$scope.firstArr.length-1].id+1
@@ -28,9 +28,7 @@
 				$scope.newTodo=''
 				$scope.isToggle()
 			}
-			if($scope.firstArr.length!=0){
-				$scope.isHide=false
-			}
+			$scope.firstArr.length == 0 ? $scope.isHide=true:$scope.isHide=false
 		}
 		$scope.remove=function(__this){
 			var _this=null
@@ -42,9 +40,7 @@
 				}
 			})
 			$scope.isToggle()
-			if($scope.firstArr.length==0){
-				$scope.isHide=true
-			}
+			$scope.firstArr.length == 0?$scope.isHide=true:$scope.isHide=false
 		}
 		$scope.edit=function(id){
 			$scope.isEditingId=id
@@ -57,6 +53,7 @@
 				var _this=this
 				$scope.remove(_this)
 			}
+			setCookie($scope.firstArr)
 			$scope.isEditingId=-1
 		}
 		$scope.toggleAll=function(){
@@ -64,6 +61,7 @@
 			$scope.firstArr.forEach(function(todo,i){
 				todo.completed=$scope.isAll
 			})
+			setCookie($scope.firstArr)
 			$scope.isShowing()
 		}
 		$scope.isToggle=function(){
@@ -75,6 +73,7 @@
 				}
 			})
 			$scope.isAll=flag
+			setCookie($scope.firstArr)
 			$scope.isShowing()
 		}
 		$scope.isShowing=function(){
@@ -85,6 +84,7 @@
 				$scope.showCompleted()
 			}
 		}
+		$scope.isToggle()
 		$scope.leftNum=function(){
 			var count=0
 			$scope.firstArr.forEach(function(todo,i){

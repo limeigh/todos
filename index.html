@@ -32,7 +32,7 @@
 						</div>
 						<input class="edit" value="Create a TodoMVC template">
 					</li> -->
-					<li ng-repeat="item in todos" ng-class="{editing:isEditingId == $index,completed:item.completed}">
+					<li ng-repeat="item in todos track by $index" ng-class="{editing:isEditingId == $index,completed:item.completed}">
 						<div class="view">
 							<input class="toggle" type="checkbox" ng-model="item.completed" ng-change="isToggle()">
 							<label ng-bind="item.name" ng-dblclick="edit($index)"></label>
